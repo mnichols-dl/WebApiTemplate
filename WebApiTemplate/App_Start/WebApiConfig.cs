@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using WebApiTemplate.Filters;
+using WebApiTemplate.Handlers;
 
 namespace WebApiTemplate
 {
@@ -19,6 +21,11 @@ namespace WebApiTemplate
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // Add custom Filters and MessageHandlers
+            config.Filters.Add(new LogUnhandledExceptionFilterAttribute());
+            config.MessageHandlers.Add(new AddCorrelationIdToResponseHandler());
+            config.MessageHandlers.Add(new LogRequestHandler());
         }
     }
 }
