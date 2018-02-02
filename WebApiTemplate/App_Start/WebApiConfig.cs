@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
 using WebApiTemplate.Filters;
 using WebApiTemplate.Handlers;
 
@@ -23,9 +20,9 @@ namespace WebApiTemplate
             );
 
             // Add custom Filters and MessageHandlers
-            config.Filters.Add(new LogUnhandledExceptionFilterAttribute());
+            config.Filters.Add(new LogUnhandledExceptionFilterAttribute(log4net.LogManager.GetLogger("Log")));
             config.MessageHandlers.Add(new AddCorrelationIdToResponseHandler());
-            config.MessageHandlers.Add(new LogRequestHandler());
+            config.MessageHandlers.Add(new LogRequestHandler(log4net.LogManager.GetLogger("Log")));
         }
     }
 }

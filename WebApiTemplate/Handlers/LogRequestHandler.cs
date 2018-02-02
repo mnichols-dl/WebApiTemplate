@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,11 +6,17 @@ using System.Web;
 namespace WebApiTemplate.Handlers
 {
     /// <summary>
-    /// A <cref="System.Net.Http.DelegatingHandler">DelegatingHandler</cref> used to log incoming HTTP requests and add request properties to logging context
+    /// A <see cref="System.Net.Http.DelegatingHandler"/> used to log incoming HTTP requests and add request properties to logging context
     /// </summary>
     public class LogRequestHandler : DelegatingHandler
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("Requests");
+        private readonly log4net.ILog log;
+
+        public LogRequestHandler(log4net.ILog log)
+        {
+            this.log = log;
+        }
+
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             // LogicalThreadContext uses CallContext to hold properties, so these properties will be accessible
@@ -26,7 +29,7 @@ namespace WebApiTemplate.Handlers
             // Add IP address to logging context if able to resolve from HttpContext
             if (request.Properties.ContainsKey("MS_HttpContext"))
             {
-                var httpContext = request.Properties["MS_HttpContext"] as HttpContextWrapper;
+                var httpContext = request.Properties["MS_HttpContext"] as HttpContextBase;
                 if (httpContext != null)
                 {
                     log4net.LogicalThreadContext.Properties["ip"] = httpContext.Request.UserHostAddress;

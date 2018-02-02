@@ -7,15 +7,20 @@ using System.Web.Http.Filters;
 namespace WebApiTemplate.Filters
 {
     /// <summary>
-    /// A custom <cref="System.Web.Http.Filters.ExceptionFilterAttribute">ExceptionFilterAttribute</cref> used to log unhandled exceptions
+    /// A custom <see cref="System.Web.Http.Filters.ExceptionFilterAttribute"/> used to log unhandled exceptions from Web API controllers
     /// </summary>
     public class LogUnhandledExceptionFilterAttribute : ExceptionFilterAttribute
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("UnhandledExceptions");
+        private readonly log4net.ILog _log;
+
+        public LogUnhandledExceptionFilterAttribute(log4net.ILog log)
+        {
+            _log = log;
+        }
 
         public override void OnException(HttpActionExecutedContext actionExecutedContext)
         {
-            log.Error("Unhandled Exception", actionExecutedContext.Exception);
+            _log.Error("Unhandled Exception", actionExecutedContext.Exception);
             base.OnException(actionExecutedContext);
         }
     }
